@@ -10,18 +10,25 @@ import os, re, sys, time, json, hashlib, argparse
 from collections import defaultdict
 
 TEXT_EXT = {".md", ".txt", ".py", ".sh", ".json", ".tsv", ".csv", ".yaml", ".yml", ".js"}
-SKIP_DIR = {".git", "node_modules", "__pycache__", ".venv", "venv", ".cache", "dist", "build"}
+SKIP_DIR = {".git", "node_modules", "__pycache__", ".venv", "venv", ".cache", "dist",
+            "build", "target", "vendor", ".next", ".nuxt", "site-packages", ".tox",
+            ".mypy_cache", ".pytest_cache", ".gradle", "Pods", "bin", "obj"}
 # Boilerplate that is duplicated by design and must never count as bloat.
 NOISE = re.compile(r"(LICENSE|COPYING|-OFL|NOTICE)", re.I)
 
 
 def walk(root):
+    seen = 0
     for dp, dns, fns in os.walk(root):
         dns[:] = [d for d in dns if d not in SKIP_DIR and not d.startswith(".")]
         for fn in fns:
             p = os.path.join(dp, fn)
             if os.path.splitext(fn)[1].lower() in TEXT_EXT and not NOISE.search(fn):
                 try:
+                    seen += 1
+                    if seen % 500 == 0:
+                        sys.stderr.write(f"    ...{seen} files read\n")
+                        sys.stderr.flush()
                     yield p, open(p, encoding="utf-8", errors="replace").read()
                 except OSError:
                     continue
@@ -52,6 +59,7 @@ def main():
     a = ap.parse_args()
 
     sys.stderr.write("  reading files...\n")
+    sys.stderr.flush()
     files = dict(walk(a.root))
     if not files:
         sys.exit(f"no text files found under {a.root}")
@@ -91,6 +99,7 @@ def main():
     #    enough to matter, so they are never compared.
     sh = {p: shingles(t) for p, t in files.items() if len(t) > 1200}
     sys.stderr.write(f"  comparing {len(sh)} files for duplication...\n")
+    sys.stderr.flush()
     buckets = defaultdict(list)
     for p, s_ in sh.items():
         for h in sorted(s_)[:64]:

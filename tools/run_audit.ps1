@@ -67,23 +67,27 @@ foreach ($f in @($audit, $check, $reg)) {
 
 $stamp = Get-Date -Format "yyyy-MM-dd"
 $out = Join-Path (Get-Location) "audit-$stamp"
-$utf8 = New-Object System.Text.UTF8Encoding($false)
 
+# Python must not buffer, or progress lines only appear at the very end.
+$env:PYTHONUNBUFFERED = "1"
+
+# Tee-Object streams to the console AND the file. Capturing into a variable
+# instead (the previous approach) shows nothing until the run finishes, which
+# is indistinguishable from a hang.
 Write-Host "`n--- audit ---" -ForegroundColor Cyan
-$txt = & $py.Exe @($py.Pre) $audit $Target "--days" "$Days" 2>&1
-$txt | Out-String | Write-Host
-[System.IO.File]::WriteAllText("$out.txt", ($txt | Out-String), $utf8)
+Write-Host "(large folders take a few minutes; progress prints as it goes)"
+& $py.Exe @($py.Pre) $audit $Target "--days" "$Days" 2>&1 | Tee-Object -FilePath "$out.txt"
 
-$json = & $py.Exe @($py.Pre) $audit $Target "--days" "$Days" "--json" 2>&1
-[System.IO.File]::WriteAllText("$out.json", ($json | Out-String), $utf8)
+Write-Host "`n--- json ---" -ForegroundColor Cyan
+& $py.Exe @($py.Pre) $audit $Target "--days" "$Days" "--json" 2>$null |
+    Out-File -FilePath "$out.json" -Encoding utf8
 
 Write-Host "`n--- registry check ---" -ForegroundColor Cyan
-$rc = & $py.Exe @($py.Pre) $check $Target "--registry" $reg 2>&1
-$rc | Out-String | Write-Host
-[System.IO.File]::WriteAllText("$out-registry.txt", ($rc | Out-String), $utf8)
+& $py.Exe @($py.Pre) $check $Target "--registry" $reg 2>&1 |
+    Tee-Object -FilePath "$out-registry.txt"
 
 Write-Host "`nWrote:" -ForegroundColor Green
 Write-Host "  $out.txt"
 Write-Host "  $out.json"
 Write-Host "  $out-registry.txt"
-Write-Host "`nPaste the .txt into the chat. Send the .json if it is asked for."
+Write-Host "`nPaste the .txt into the chat."
