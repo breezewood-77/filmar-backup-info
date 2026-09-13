@@ -51,10 +51,12 @@ def main():
     ap.add_argument("--json", action="store_true")
     a = ap.parse_args()
 
+    sys.stderr.write("  reading files...\n")
     files = dict(walk(a.root))
     if not files:
         sys.exit(f"no text files found under {a.root}")
 
+    sys.stderr.write(f"  {len(files)} text files\n")
     now = time.time()
     stale_cut = now - a.days * 86400
     skills, tasks, scripts, docs = {}, {}, {}, {}
@@ -83,18 +85,32 @@ def main():
                             "worst": [{"skill": n, "desc_chars": d} for d, _, n in rows[:10]]}
 
     # 2. DUPLICATION -- near-identical prose across any two files (9-word shingles).
+    #    Comparing every pair is O(n^2) and hangs on a real vault, so candidate
+    #    pairs are found first via an inverted index on each file's 64 smallest
+    #    shingle hashes. Two files that share no sampled shingle cannot overlap
+    #    enough to matter, so they are never compared.
     sh = {p: shingles(t) for p, t in files.items() if len(t) > 1200}
+    sys.stderr.write(f"  comparing {len(sh)} files for duplication...\n")
+    buckets = defaultdict(list)
+    for p, s_ in sh.items():
+        for h in sorted(s_)[:64]:
+            buckets[h].append(p)
+    cand = set()
+    for grp in buckets.values():
+        if len(grp) > 40:          # a shingle in half the corpus says nothing
+            continue
+        for i, x in enumerate(grp):
+            for y in grp[i + 1:]:
+                cand.add((x, y) if x < y else (y, x))
     dupes = []
-    keys = list(sh)
-    for i, x in enumerate(keys):
-        for y in keys[i + 1:]:
-            if not sh[x] or not sh[y]:
-                continue
-            inter = len(sh[x] & sh[y])
-            j = inter / min(len(sh[x]), len(sh[y]))
-            if j > 0.25:
-                dupes.append({"overlap_pct": round(j * 100), "shared_shingles": inter,
-                              "a": os.path.relpath(x, a.root), "b": os.path.relpath(y, a.root)})
+    for x, y in cand:
+        inter = len(sh[x] & sh[y])
+        if not inter:
+            continue
+        j = inter / min(len(sh[x]), len(sh[y]))
+        if j > 0.25:
+            dupes.append({"overlap_pct": round(j * 100), "shared_shingles": inter,
+                          "a": os.path.relpath(x, a.root), "b": os.path.relpath(y, a.root)})
     dupes.sort(key=lambda d: -d["overlap_pct"])
     out["duplication"] = dupes[:25]
 
