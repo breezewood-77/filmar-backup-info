@@ -74,16 +74,22 @@ $env:PYTHONUNBUFFERED = "1"
 # Tee-Object streams to the console AND the file. Capturing into a variable
 # instead (the previous approach) shows nothing until the run finishes, which
 # is indistinguishable from a hang.
+#
+# Do NOT add 2>&1 here. PowerShell turns a native command's stderr into an
+# error record, and with $ErrorActionPreference = "Stop" that aborts the run
+# the first time the script prints progress. Left alone, stderr goes straight
+# to the console and stdout goes through the pipe.
+$ErrorActionPreference = "Continue"
 Write-Host "`n--- audit ---" -ForegroundColor Cyan
 Write-Host "(large folders take a few minutes; progress prints as it goes)"
-& $py.Exe @($py.Pre) $audit $Target "--days" "$Days" 2>&1 | Tee-Object -FilePath "$out.txt"
+& $py.Exe @($py.Pre) $audit $Target "--days" "$Days" | Tee-Object -FilePath "$out.txt"
 
 Write-Host "`n--- json ---" -ForegroundColor Cyan
 & $py.Exe @($py.Pre) $audit $Target "--days" "$Days" "--json" 2>$null |
     Out-File -FilePath "$out.json" -Encoding utf8
 
 Write-Host "`n--- registry check ---" -ForegroundColor Cyan
-& $py.Exe @($py.Pre) $check $Target "--registry" $reg 2>&1 |
+& $py.Exe @($py.Pre) $check $Target "--registry" $reg |
     Tee-Object -FilePath "$out-registry.txt"
 
 Write-Host "`nWrote:" -ForegroundColor Green
