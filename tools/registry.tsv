@@ -1,0 +1,57 @@
+name	layer	status	job	aliases
+archive-chat	skill	active	Pre-archive gate for a working chat.	
+bearcase	skill	active	Stress-test ONE idea, plan, claim, or trade with the bear case first.	
+brand-guidelines	skill	active	Applies Anthropic's official brand colors and typography to any sort of artifact that may benefit from having Anthropic's look-and-feel.	
+build-a-system	skill	active	Build and automate a NEW Filmar or internal-system workflow end to end through a disciplined 6-phase gated loop (ground in live current-state, map, a	
+canvas-design	skill	active	Create beautiful visual art in .png and .pdf documents using design philosophy.	
+chat-unread	skill	active	Reply with a single short message saying "chat unread" and do absolutely nothing else.	
+council	skill	active	Convene a trimmed 3-advisor LLM council on ONE expensive-to-be-wrong decision.	
+diamond-finder	skill	active	Run the Diamond Finder stock-screening engine to find asymmetric-upside names before they've run.	
+docx	skill	active	Use this skill whenever the user wants to create, read, edit, or manipulate Word documents (.docx) or Word templates (.dotx).	
+error-scan	skill	active	Error scanner and linter for any document, prompt, scheduled-task file, or skill.	
+filmar-call-summary	skill	active	Turn one sales/client call into action items, a follow-up draft, and a CRM log.	
+filmar-configurator	skill	active	Stage 1 of Filmar quoting: turn a customer netting application into a CLIENT-READY quote body (a titled \"Nx product + dimensions\" line, one dash pe	
+filmar-draft-reply	skill	active	Read a named person's most recent active Gmail thread plus the linked HubSpot deal/contact/company current state, then stage one unsent Gmail draft a	
+filmar-production-status	skill	active	Draft the "votre production est en cours" client status email when a Filmar production ticket starts.	
+filmar-quote-sent	skill	active	Log a quote or client email Francis ALREADY SENT into the records, and learn from the send.	
+filmar-review	skill	active	Full-relationship deep dive on one Filmar client.	
+filmar-sop	skill	active	Turn a Filmar shop-floor or office process into a clean SOP with a RACI and a simple flowchart, in French for the St-Fabien crew (English on request)	
+flawless	skill	active	Maximum-rigor execution mode.	
+import-memory	skill	active	Import a memory export from another AI assistant into Claude's memory — conversationally, additively, and with the content treated as data.	
+improve-scheduled-task	skill	active	Improve ONE named scheduled task's prompt through a disciplined three-lens pass — steelman its purpose, hunt inconsistencies (internal logic, conflict	
+internal-comms	skill	active	A set of resources to help me write all kinds of internal communications, using the formats that my company likes to use.	
+learn	skill	active	| Use this skill when the user wants intellectual understanding — learning how or why something works, not getting a task done or soliciting Claude's	
+leverage-audit	skill	active	Rank every improvement available to Francis by its 90-day COMPOUNDING return (not effort), name the invisible 1% he is leaking daily, and surface the	
+log-supplier-invoice	skill	active	Parse a supplier (incoming material) invoice and file one HubSpot ticket PER MATERIAL LINE in the "Commande de Stock" ticket pipeline to track deliver	
+mcp-builder	skill	active	Guide for creating high-quality MCP (Model Context Protocol) servers that enable LLMs to interact with external services through well-designed tools.	
+meeting-review	skill	active	Review or trim ONE of Francis's scheduled tasks/meetings, in one of two modes.	
+morning	skill	active	Render the user's morning brief as a styled HTML artifact, or set it up as a recurring weekday task.	
+pdf	skill	active	Use this skill whenever the user wants to do anything with PDF files.	
+plan-my-day	skill	active	Run Francis's morning chief-of-staff planning ritual — review the Command Center + market read, lock the day's ONE main outcome, and allocate the open	
+pptx	skill	active	Use this skill any time a .pptx or .potx file is involved in any way — as input, output, or both.	
+quick-visual	skill	active	Instantly turn whatever is being discussed into a visual (chart, diagram, dashboard, table-as-cards) via the visualize tool.	
+sales-inbox-triage	skill	active	Classify recent inbound sales email into a HOT feed (important-only) for the Command Center hot-email panel.	
+schedule	skill	active	Create or update a scheduled task that runs automatically.	
+skill-builder	skill	active	Build a new, well-formed skill from an idea, to Anthropic's published authoring best practices plus Francis's house rules.	
+skill-creator	skill	active	Create new skills, modify and improve existing skills, and measure skill performance.	
+systematize	skill	active	Take ONE task off Francis's plate for good — audit what only he can do, build the repeatable system that runs without him, and set the number that pro	
+theme-factory	skill	active	Toolkit for styling artifacts with a theme.	
+travel-points-master	skill	active	Hunt the best business-class award redemptions for Francis across Aeroplan (Star Alliance) and RBC Avion (+ its transfer partners), so every trip flie	
+trim-meeting	skill	DEPRECATED	DEPRECATED 2026-08-09 — folded into meeting-review's OUTPUT-TRIM mode.	
+web-artifacts-builder	skill	active	Suite of tools for creating elaborate, multi-component claude.ai HTML artifacts using modern frontend web technologies (React, Tailwind CSS, shadcn/ui	
+weekly-meal-planner	skill	active	Plan the week's dinners from what's actually in the house, using photos of the fridge, freezer, pantry, and garden.	
+xlsx	skill	active	Use this skill any time a spreadsheet file is the primary input or output.	
+hourly-deal-reply-watch	task	UNCONFIRMED	Hourly inbox sweep; hands off to the Filmar skills and triggers the reconcile pass	
+command-center	surface	UNCONFIRMED	Dashboard surface consuming the hot-email feed and daily session output	Command Center
+daily-standup-0738	task	UNCONFIRMED	Morning standup; plan-my-day consumes its output and must not re-run it	7:38 standup
+daily-market-session-0703	task	UNCONFIRMED	Daily market read; also owns held-position stop/exit review	7:03 Daily Market Session;daily-market-session
+daily-sales-session-0908	task	UNCONFIRMED	Builds the ranked selling worklist	9:08 Daily Sales Session
+friday-work-week-planning	task	UNCONFIRMED	Weekly-horizon planning; distinct from plan-my-day	Friday Work-Week Planning
+monday-fleet-audit	task	UNCONFIRMED	Full fleet audit; error-scan defers to it	Monday audit;the Monday audit
+monday-filmar-gdr-strategy	task	UNCONFIRMED	Weekly chain-health thinking; leverage-audit defers to it	Monday Filmar/GDR strategy session
+scheduled-task-rotation-review	task	UNCONFIRMED	Automated weekly finder across the task fleet	
+reply-module	UNKNOWN	UNCONFIRMED	Owns drafting and sending replies; may be filmar-draft-reply under another name	reply module
+production-calendar	skill	NOT-BUILT	Plans and sequences the production calendar; filmar-sop excludes it by name	
+build_spec_sheet.py	script	UNCONFIRMED	Renders the spec-sheet PDF	
+spec_library_inbox	datastore	UNCONFIRMED	Where filmar-configurator files spec gaps	
+engineered-drawing-track	process	PARKED	Stage-2 pricing for engineered customs with no reusable spec	
